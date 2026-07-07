@@ -104,6 +104,9 @@ processing:
 
 Puis relance le script.
 
-## Validation sur une autre machine
+## Documentation
 
-Voir la procédure détaillée : [`docs/VALIDATION.md`](docs/VALIDATION.md).
+- Validation sur une autre machine : [`docs/VALIDATION.md`](docs/VALIDATION.md)
+- Reprise du contexte projet : [`docs/HANDOFF.md`](docs/HANDOFF.md)
+- Diagnostic des problèmes courants : [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md)
+- Évolutions envisagées : [`docs/ROADMAP.md`](docs/ROADMAP.md)
