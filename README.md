@@ -30,7 +30,7 @@ La configuration actuelle cible :
 https://www.youtube.com/@indydevdan
 ```
 
-avec les onglets `videos`, `shorts` et `streams`, puis récupère les sous-titres anglais manuels et automatiques au format `vtt`.
+avec l'onglet `videos`, puis récupère les sous-titres anglais manuels et automatiques au format `vtt`. Tu peux ajouter `shorts` ou `streams` dans `tabs` si la chaîne possède ces onglets.
 
 Pour accéder aux vidéos visibles uniquement via ton compte, active les cookies :
 

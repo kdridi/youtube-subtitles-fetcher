@@ -6,8 +6,8 @@ sources:
     type: channel
     url: "https://www.youtube.com/@indydevdan"
     # Pour une chaîne, on interroge ces onglets et on déduplique les vidéos.
-    # Supprime "shorts" ou "streams" si tu n'en veux pas.
-    tabs: ["videos", "shorts", "streams"]
+    # Ajoute "shorts" ou "streams" si la chaîne possède ces onglets.
+    tabs: ["videos"]
 
 subtitles:
   # Récupère les sous-titres anglais manuels et automatiques, y compris variantes en-*
