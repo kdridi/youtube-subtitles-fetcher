@@ -1,0 +1,41 @@
+# Configuration pour récupérer les URLs et sous-titres YouTube.
+# Active `youtube.use_cookies` si tu veux accéder à ce que ton compte YouTube peut voir.
+
+sources:
+  - name: indydevdan
+    type: channel
+    url: "https://www.youtube.com/@indydevdan"
+    # Pour une chaîne, on interroge ces onglets et on déduplique les vidéos.
+    # Supprime "shorts" ou "streams" si tu n'en veux pas.
+    tabs: ["videos", "shorts", "streams"]
+
+subtitles:
+  # Récupère les sous-titres anglais manuels et automatiques, y compris variantes en-*
+  languages: ["en"]
+  include_language_variants: true
+  manual: true
+  auto: true
+  format: "vtt"
+
+output:
+  directory: "./data"
+  save_video_urls: true
+  save_listing_jsonl: true
+  save_metadata: true
+  overwrite: false
+
+processing:
+  # Limite optionnelle pour tester rapidement. Mettre null pour tout traiter.
+  limit: null
+
+# Options d'authentification facultatives.
+youtube:
+  use_cookies: false
+  # Exemples : chrome, firefox, safari, edge, brave, chromium
+  cookies_from_browser: "chrome"
+  # Alternative à cookies_from_browser : chemin vers un fichier cookies Netscape.
+  cookies_file: null
+
+yt_dlp:
+  binary: "yt-dlp"
+  extra_args: []

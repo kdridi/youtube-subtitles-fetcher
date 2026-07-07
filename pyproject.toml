@@ -1,0 +1,13 @@
+[project]
+name = "youtube-subtitles-fetcher"
+version = "0.1.0"
+description = "Outil configurable pour lister des vidéos YouTube et récupérer leurs sous-titres."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "PyYAML>=6.0",
+  "yt-dlp>=2025.1.0",
+]
+
+[tool.uv]
+package = false
