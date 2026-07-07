@@ -12,7 +12,7 @@ Ce projet utilise [`uv`](https://docs.astral.sh/uv/) d'Astral pour gérer l'envi
 uv sync
 ```
 
-Les dépendances Python déclarées dans `pyproject.toml` incluent `PyYAML` et `yt-dlp`. Il n'est donc pas nécessaire d'installer `yt-dlp` avec `brew` si tu lances le script via `uv run`.
+Les dépendances Python déclarées dans `pyproject.toml` incluent `PyYAML`, `yt-dlp` et `streamlit`. Il n'est donc pas nécessaire d'installer `yt-dlp` avec `brew` si tu lances le script via `uv run`.
 
 ## Configuration
 
@@ -42,7 +42,23 @@ youtube:
 
 Cela ne contourne aucune restriction : `yt-dlp` utilisera seulement les droits de ton navigateur connecté.
 
-## Utilisation
+## Interface graphique locale
+
+Lance l'interface Streamlit :
+
+```bash
+uv run streamlit run app.py
+```
+
+L'interface permet de :
+
+- construire un fichier `config.yaml` avec des garde-fous ;
+- choisir une chaîne et/ou des playlists ;
+- choisir le navigateur à utiliser pour les cookies ;
+- limiter le traitement à quelques vidéos pour les tests ;
+- lancer le listing ou le téléchargement avec logs et progression.
+
+## Utilisation CLI
 
 Lister les vidéos uniquement :
 

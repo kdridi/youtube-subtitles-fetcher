@@ -3,9 +3,10 @@
 Cette procédure sert à vérifier qu'un clone frais du repository permet bien de :
 
 1. installer l'environnement Python avec `uv` ;
-2. lister les vidéos d'une chaîne ou d'une playlist YouTube ;
-3. récupérer les sous-titres disponibles ;
-4. produire les fichiers attendus dans `data/`.
+2. lancer l'interface graphique locale ;
+3. lister les vidéos d'une chaîne ou d'une playlist YouTube ;
+4. récupérer les sous-titres disponibles ;
+5. produire les fichiers attendus dans `data/`.
 
 ## 1. Prérequis système
 
@@ -47,7 +48,8 @@ uv sync
 Cette commande crée l'environnement `.venv/` et installe les dépendances déclarées dans `pyproject.toml`, notamment :
 
 - `PyYAML` ;
-- `yt-dlp`.
+- `yt-dlp` ;
+- `streamlit`.
 
 ## 4. Vérifier que le script démarre
 
@@ -57,7 +59,31 @@ uv run scripts/fetch_youtube_subtitles.py --help
 
 Résultat attendu : l'aide du script doit s'afficher avec les options `--config`, `--list-only` et `--subtitles-only`.
 
-## 5. Préparer une configuration de test
+## 5. Tester l'interface graphique
+
+Lancer l'interface locale :
+
+```bash
+uv run streamlit run app.py
+```
+
+Résultat attendu : Streamlit affiche une URL locale, généralement :
+
+```text
+http://localhost:8501
+```
+
+Dans le navigateur, vérifier :
+
+- la page `Construire une configuration` s'affiche ;
+- la limite par défaut est un test rapide de 3 vidéos ;
+- le bouton `Générer la configuration` peut créer `config.yaml` après confirmation d'écrasement si le fichier existe ;
+- la page `Appliquer une configuration` permet de sélectionner `config.yaml` ;
+- le bouton `Lister les vidéos uniquement` affiche des logs et produit `data/<source>/video_urls.txt`.
+
+Pour arrêter l'interface : `Ctrl+C` dans le terminal.
+
+## 6. Préparer une configuration de test CLI
 
 Si `config.yaml` n'existe pas encore :
 
@@ -93,7 +119,7 @@ sources:
     url: "https://www.youtube.com/playlist?list=PLAYLIST_ID"
 ```
 
-## 6. Tester uniquement le listing des vidéos
+## 7. Tester uniquement le listing des vidéos
 
 ```bash
 uv run scripts/fetch_youtube_subtitles.py --config config.yaml --list-only
@@ -116,7 +142,7 @@ head data/*/video_urls.txt
 
 Le fichier `video_urls.txt` doit contenir des URLs YouTube.
 
-## 7. Tester la récupération des sous-titres
+## 8. Tester la récupération des sous-titres
 
 Avec `processing.limit: 3` pour éviter un test trop long :
 
@@ -148,7 +174,7 @@ data/<source>/subtitles/<VIDEO_ID>/*.vtt
 
 Note : certaines vidéos peuvent ne pas avoir de sous-titres dans la langue demandée. Dans ce cas, elles apparaîtront dans `report.json` comme sans sous-titres.
 
-## 8. Tester la reprise à partir du listing existant
+## 9. Tester la reprise à partir du listing existant
 
 Supprimer éventuellement un dossier de sous-titres, puis relancer seulement l'étape sous-titres :
 
@@ -158,7 +184,7 @@ uv run scripts/fetch_youtube_subtitles.py --config config.yaml --subtitles-only
 
 Résultat attendu : le script réutilise `videos.jsonl` ou `video_urls.txt` déjà présent dans `data/<source>/`.
 
-## 9. Tester l'accès authentifié facultatif
+## 10. Tester l'accès authentifié facultatif
 
 Si tu veux récupérer les contenus visibles depuis ton compte YouTube connecté, active les cookies dans `config.yaml` :
 
@@ -186,18 +212,20 @@ uv run scripts/fetch_youtube_subtitles.py --config config.yaml --list-only
 
 Important : cette option ne contourne pas les restrictions YouTube. Elle permet seulement à `yt-dlp` d'utiliser les droits du compte déjà connecté dans le navigateur.
 
-## 10. Critères de validation
+## 11. Critères de validation
 
 Le projet est considéré fonctionnel si :
 
 - `uv sync` réussit ;
 - `uv run scripts/fetch_youtube_subtitles.py --help` fonctionne ;
+- `uv run streamlit run app.py` lance l'interface ;
+- l'interface peut générer un `config.yaml` de test ;
 - `--list-only` crée `video_urls.txt` et `videos.jsonl` ;
 - l'exécution complète crée `subtitles/` et `report.json` ;
 - le script peut être relancé sans tout casser ;
 - le changement de source dans `config.yaml` permet de tester une autre chaîne ou playlist.
 
-## 11. Nettoyer après test
+## 12. Nettoyer après test
 
 Pour supprimer les données générées :
 

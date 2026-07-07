@@ -88,10 +88,25 @@ def yt_extra_args(config: Dict[str, Any]) -> List[str]:
     return [str(x) for x in extra]
 
 
-def run_command(args: Sequence[str], *, quiet: bool = False) -> subprocess.CompletedProcess:
+def run_command(args: Sequence[str], *, quiet: bool = False, stream: bool = False) -> subprocess.CompletedProcess:
     if not quiet:
-        print("$ " + " ".join(shell_quote(x) for x in args))
-    return subprocess.run(args, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("$ " + " ".join(shell_quote(x) for x in args), flush=True)
+    if not stream:
+        return subprocess.run(args, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    proc = subprocess.Popen(
+        args,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        bufsize=1,
+    )
+    output: List[str] = []
+    assert proc.stdout is not None
+    for line in proc.stdout:
+        output.append(line)
+        print(line, end="", flush=True)
+    return subprocess.CompletedProcess(args, proc.wait(), "".join(output), "")
 
 
 def shell_quote(value: str) -> str:
@@ -265,7 +280,7 @@ def download_subtitles(config: Dict[str, Any], base_dir: Path, videos: List[Vide
         before = set(video_dir.glob("*")) if video_dir.exists() else set()
         video_dir.mkdir(parents=True, exist_ok=True)
 
-        args = [yt_dlp, "--ignore-errors", "--skip-download"]
+        args = [yt_dlp, "--ignore-errors", "--newline", "--skip-download"]
         if subtitles_cfg.get("manual", True):
             args.append("--write-subs")
         if subtitles_cfg.get("auto", True):
@@ -287,12 +302,8 @@ def download_subtitles(config: Dict[str, Any], base_dir: Path, videos: List[Vide
             video.url,
         ]
 
-        print(f"\n[{index}/{len(videos)}] {video.title or video.id}")
-        proc = run_command(args, quiet=False)
-        if proc.stdout.strip():
-            print(proc.stdout.strip())
-        if proc.stderr.strip():
-            print(proc.stderr.strip(), file=sys.stderr)
+        print(f"\n[{index}/{len(videos)}] {video.title or video.id}", flush=True)
+        proc = run_command(args, quiet=False, stream=True)
 
         after = set(video_dir.glob("*"))
         subtitle_files = sorted(p for p in after if p.suffix.lower() in {".vtt", ".srt", ".ass", ".ttml", ".srv1", ".srv2", ".srv3"})
